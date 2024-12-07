@@ -1,7 +1,7 @@
 import math
 
-from flask import render_template, request, redirect
-import dao
+from flask import render_template, request, redirect, session, jsonify
+import dao, utils
 from app import app, login
 from flask_login import login_user, logout_user
 from app.models import UserRole
@@ -51,6 +51,29 @@ def login_admin_procees():
             login_user(u)
             return redirect('/admin')
         return redirect('/admin')
+
+@app.route("/api/carts", methods=['POST'])
+def add_to_cart():
+    cart = session.get('cart')
+    if not cart:
+        cart={}
+
+    id = request.json.get("id")
+    name = request.json.get("name")
+    price = request.json.get("price")
+
+    if id in cart:
+        cart[id]["quantity"] +=1
+    else:
+        cart[id]={
+            "id": id,
+            "name": name,
+            "price": 123,
+            "quantity": 1
+        }
+    session['cart'] = cart
+    print(cart)
+    return jsonify(utils.stats_cart(cart))
 
 if __name__ == '__main__':
 
