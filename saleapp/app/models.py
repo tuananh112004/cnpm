@@ -4,11 +4,15 @@ from enum import Enum as RoleEnum
 from app import app, db
 from flask_login  import UserMixin
 
+
+
 class Category(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False, unique=True)
     products = relationship('Product', backref='category', lazy=True)
 
+    def __str__(self):
+        return self.name
 
 class Product(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -18,7 +22,8 @@ class Product(db.Model):
     image = Column(String(100), nullable=True)
     active = Column(Boolean, default=True)
     category_id = Column(Integer, ForeignKey(Category.id), nullable=False)
-
+    def __str__(self):
+        return self.name
 class UserRole(RoleEnum):
     ADMIN = 1
     User = 2

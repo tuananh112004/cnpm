@@ -4,7 +4,7 @@ from flask import render_template, request, redirect
 import dao
 from app import app, login
 from flask_login import login_user, logout_user
-
+from app.models import UserRole
 
 @app.route("/")
 def index():
@@ -41,5 +41,18 @@ def logout_procees():
     logout_user()
     return redirect('/login')
 
+@app.route("/login-admin", methods=['POST'])
+def login_admin_procees():
+    if request.method.__eq__('POST'):
+        username = request.form.get('username')
+        password = request.form.get('password')
+        u = dao.auth_user(username, password, role=UserRole.ADMIN)
+        if u:
+            login_user(u)
+            return redirect('/admin')
+        return redirect('/admin')
+
 if __name__ == '__main__':
+
+    from app import admin
     app.run(debug=True)

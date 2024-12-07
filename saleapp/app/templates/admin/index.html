@@ -1,9 +1,12 @@
-{% extends 'layout/base.html'%}
+{% extends 'admin/master.html'%}
 
+{% block body %}
 
-{% block content%}
+{% if current_user.is_authenticated %}
+<h1 class="text-success">Chao {{ current_user.username}}</h1>
+{% else %}
 <h1 class="text-center text-danger mt-1">Dang nhap</h1>
-<form method="POST" action="/login">
+<form method="post" action="/login-admin">
     <div class="form-floating mb-3 mt-3">
         <input type="text" class="form-control" id="email" placeholder="Enter email" name="username">
         <label for="email">Email</label>
@@ -18,4 +21,5 @@
         <button class="btn btn-danger">Dang nhap</button>
     </div>
 </form>
-{%endblock%}
+{% endif %}
+{% endblock %}
